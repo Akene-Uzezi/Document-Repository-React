@@ -14,9 +14,13 @@ class User {
   }
 
   static generateAuthToken(user) {
-    const token = jwt.sign({ user }, process.env.JWTSecret, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { name: user.name, email: user.email, isAdmin: user.isAdmin },
+      process.env.JWTSecret,
+      {
+        expiresIn: "1h",
+      },
+    );
     return token;
   }
 

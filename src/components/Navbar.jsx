@@ -3,7 +3,11 @@ import { motion } from "motion/react";
 import "../App.css";
 const variants = {
   hidden: { opacity: 0, x: -20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.5, stagger: 10 } },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { staggerChildren: 0.5, duration: 0.8 },
+  },
 };
 
 const childVariants = {
@@ -25,7 +29,11 @@ const Navbar = () => {
           animate="visible"
           className="max-w-7xl mx-auto flex items-center justify-between"
         >
-          <motion.a href="/" className="flex items-center space-x-3 group">
+          <motion.a
+            variants={childVariants}
+            href="/"
+            className="flex items-center space-x-3 group"
+          >
             <motion.img
               variants={childVariants}
               initial="hidden"
