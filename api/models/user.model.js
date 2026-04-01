@@ -91,6 +91,7 @@ class User {
         user: process.env.AdminEmail,
         pass: process.env.AppPassword,
       },
+      family: 4,
     });
     let mailOptions = {
       from: `"Filehub Admin" ${process.env.AdminEmail}`,
@@ -144,6 +145,7 @@ class User {
         user: process.env.AdminEmail,
         pass: process.env.AppPassword,
       },
+      family: 4,
     });
 
     let mailOptions = {
@@ -172,6 +174,7 @@ class User {
         user: process.env.AdminEmail,
         pass: process.env.AppPassword,
       },
+      family: 4,
     });
     let mailOptions = {
       from: `"Filehub Admin" ${process.env.AdminEmail}`,
@@ -211,6 +214,7 @@ class User {
         user: process.env.AdminEmail,
         pass: process.env.AppPassword,
       },
+      family: 4,
     });
     let mailOptions = {
       from: `"Filehub Admin" ${process.env.AdminEmail}`,
