@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
+import CreateUser from "./pages/admin/CreateUser";
 const App = () => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = () => {
         </Route>
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/create-user" element={<CreateUser />} />
         </Route>
       </Routes>
     </Router>

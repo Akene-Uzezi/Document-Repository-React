@@ -22,17 +22,17 @@ const createUser = async (req, res) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmpassword;
+  // const confirmPassword = req.body.confirmpassword;
   const user = new User(name, email, password);
   const exists = await user.alreadyExists();
   if (exists) {
     res.status(409).json({ error: "User with that email already exists" });
     return;
   }
-  if (password !== confirmPassword) {
-    res.status(400).json({ error: "Passwords do not match" });
-    return;
-  }
+  // if (password !== confirmPassword) {
+  //   res.status(400).json({ error: "Passwords do not match" });
+  //   return;
+  // }
   await user.createUser();
   res.status(201).json({ message: "User created successfully" });
 };

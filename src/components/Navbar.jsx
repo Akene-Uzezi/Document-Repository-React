@@ -1,5 +1,6 @@
 import image from "/img/rhv logo.png";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 const variants = {
   hidden: { opacity: 0, x: -20 },
@@ -19,6 +20,17 @@ const token = localStorage.getItem("token");
 const isAuthenticated = token !== null;
 const isAdmin = user && user.isAdmin === true;
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleCreateUser = () => {
+    navigate("/admin/create-user");
+  };
+  const getDashboard = () => {
+    if (isAdmin) {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("/dashboard");
+    }
+  };
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -77,12 +89,35 @@ const Navbar = () => {
               <>
                 <motion.button
                   variants={childVariants}
+                  onClick={getDashboard}
                   initial="hidden"
+                  animate="visible"
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
+                >
+                  Dashboard
+                </motion.button>
+                <motion.button
+                  variants={childVariants}
+                  initial="hidden"
+                  onClick={handleCreateUser}
                   animate="visible"
                   className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
                 >
                   create User
                 </motion.button>
+                <motion.button
+                  variants={childVariants}
+                  onClick={logout}
+                  initial="hidden"
+                  animate="visible"
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
+                >
+                  Log out
+                </motion.button>
+              </>
+            )}
+            {isAuthenticated && !isAdmin && (
+              <>
                 <motion.button
                   variants={childVariants}
                   onClick={logout}

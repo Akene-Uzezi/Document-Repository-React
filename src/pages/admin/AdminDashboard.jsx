@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
-import { AnimatePresence } from "motion/react";
+import { Loader2, Pencil, Trash2, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 const AdminDashboard = () => {
   const token = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -24,11 +26,15 @@ const AdminDashboard = () => {
     };
     fetchUsers();
   }, []);
+  const handleOpenModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
   return (
     <div>
       {loading && (
         <AnimatePresence mode="wait">
-          <Loader2 className="animate-spin" size={48} />
+          <Loader2 className="animate-spin text-center" size={48} />
         </AnimatePresence>
       )}
       {!loading && (
@@ -67,16 +73,92 @@ const AdminDashboard = () => {
 
                 {/* Actions (Pencil & Trash2) */}
                 <div className="flex items-center gap-1">
-                  <button className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors">
+                  <button
+                    onClick={() => {
+                      handleOpenModal(user);
+                    }}
+                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
+                  >
                     <Pencil size={14} />
                   </button>
-                  <button className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                    <Trash2 size={14} />
-                  </button>
+                  {!user.isAdmin && (
+                    <button className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
+                      <Trash2 size={14} />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
           </div>
+          {isModalOpen && (
+            <>
+              <AnimatePresence>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden"
+                  >
+                    {/* Modal Header */}
+                    <div className="flex items-center justify-between p-4 border-b border-slate-100">
+                      <h2 className="text-lg font-semibold text-slate-800">
+                        Edit User
+                      </h2>
+                      <button
+                        onClick={() => setIsModalOpen(false)}
+                        className="text-slate-400 hover:text-slate-600"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+
+                    {/* Modal Body / Form */}
+                    <form className="p-4 space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                          Full Name
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={selectedUser?.name}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          defaultValue={selectedUser?.email}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsModalOpen(false);
+                          }}
+                          className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg"
+                        >
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
+                </div>
+              </AnimatePresence>
+            </>
+          )}
         </div>
       )}
     </div>

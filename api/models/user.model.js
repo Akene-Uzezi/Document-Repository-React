@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const { text } = require("body-parser");
 const ObjectId = require("mongodb").ObjectId;
 class User {
   constructor(name, email, password) {
@@ -15,7 +14,11 @@ class User {
 
   static generateAuthToken(user) {
     const token = jwt.sign(
-      { name: user.name, email: user.email, isAdmin: user.isAdmin },
+      {
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
       process.env.JWTSecret,
       {
         expiresIn: "1h",
@@ -59,6 +62,7 @@ class User {
         user: process.env.AdminEmail,
         pass: process.env.AppPassword,
       },
+      family: 4,
     });
 
     let mailOptions = {
