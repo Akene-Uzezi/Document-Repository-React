@@ -200,14 +200,14 @@ class User {
     await db
       .getDb()
       .collection("users")
-      .updateOne({ _id: new ObjectId(id) }, { $set: { suspended: true } });
+      .updateOne({ _id: new ObjectId(id) }, { $set: { isSuspended: true } });
   }
 
   static async restoreUser(id) {
     await db
       .getDb()
       .collection("users")
-      .updateOne({ _id: new ObjectId(id) }, { $set: { suspended: false } });
+      .updateOne({ _id: new ObjectId(id) }, { $set: { isSuspended: false } });
   }
 
   static async sendRestoreEmail(user) {

@@ -34,6 +34,10 @@ const Login = () => {
       });
       if (response.ok) {
         const data = await response.json();
+        setFormData({
+          email: "",
+          password: "",
+        });
         setSuccess("Login success");
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));

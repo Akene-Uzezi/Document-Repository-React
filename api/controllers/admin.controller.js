@@ -8,7 +8,7 @@ const getUsers = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      suspended: user.suspended,
+      isSuspended: user.isSuspended,
     };
   });
   res.status(200).json({ users: newUsers });

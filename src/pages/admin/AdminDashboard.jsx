@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Loader2, Pencil, Trash2, X } from "lucide-react";
+import { Loader2, Pencil, Trash2, X, Ban, RotateCw } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 const AdminDashboard = () => {
   const token = localStorage.getItem("token");
@@ -26,6 +26,20 @@ const AdminDashboard = () => {
     };
     fetchUsers();
   }, []);
+  const handleSuspend = async (user) => {
+    const token = localStorage.getItem("token");
+    if (user.isSuspended) {
+      await fetch(`${import.meta.env.VITE_API_URL}/admin/restore/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      window.location.reload();
+    } else {
+      await fetch(`${import.meta.env.VITE_API_URL}/admin/suspend/${user.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      window.location.reload();
+    }
+  };
   const handleOpenModal = (user) => {
     setSelectedUser(user);
     setIsModalOpen(true);
@@ -82,9 +96,28 @@ const AdminDashboard = () => {
                     <Pencil size={14} />
                   </button>
                   {!user.isAdmin && (
-                    <button className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors">
-                      <Trash2 size={14} />
-                    </button>
+                    <>
+                      {user.isSuspended ? (
+                        <motion.button
+                          whileTap={{ rotate: 360 }}
+                          onClick={() => {
+                            handleSuspend(user);
+                          }}
+                          className="p-1.5 text-slate-400 hover:text-green-600 hover:bg-red-50 rounded-md transition-colors"
+                        >
+                          <RotateCw size={14} />
+                        </motion.button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            handleSuspend(user);
+                          }}
+                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        >
+                          <Ban size={14} />
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
