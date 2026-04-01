@@ -1,4 +1,7 @@
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 const variant = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { stagger: 0.9, duration: 0.8 } },
@@ -9,6 +12,53 @@ const childVariants = {
   visible: { opacity: 1, y: 0 },
 };
 const Login = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setSuccess("Login success");
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        setTimeout(() => {
+          setSuccess(null);
+          if (data.user.isAdmin) {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/dashboard");
+          }
+        }, 2000);
+      }
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error);
+        setTimeout(() => {
+          setError(null);
+        }, 3000);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <motion.div
       variants={variant}
@@ -45,9 +95,30 @@ const Login = () => {
             Enter your credentials to access your dashboard.
           </motion.p>
         </motion.header>
+        {error && (
+          <motion.p
+            className="bg-red-400 px-20 py-3 mb-2 rounded-lg"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {error}
+          </motion.p>
+        )}
+        {success && (
+          <motion.p
+            className="bg-green-400 px-20 py-3 mb-2 rounded-lg"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {success}
+          </motion.p>
+        )}
 
         <motion.form
           variants={variant}
+          onSubmit={handleSubmit}
           initial="hidden"
           animate="visible"
           action="#"
@@ -70,9 +141,10 @@ const Login = () => {
             </motion.label>
             <motion.input
               variants={childVariants}
+              onChange={handleChange}
               initial="hidden"
               animate="visible"
-              type="email"
+              type="text"
               id="email"
               name="email"
               required
@@ -101,8 +173,8 @@ const Login = () => {
               variants={childVariants}
               initial="hidden"
               animate="visible"
+              onChange={handleChange}
               type="password"
-              id="password"
               name="password"
               required
               className="block w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-blue-600 focus:outline-none text-slate-900 placeholder-slate-400"
@@ -116,15 +188,64 @@ const Login = () => {
             initial="hidden"
             animate="visible"
           >
-            <motion.button
-              variants={childVariants}
-              initial="hidden"
-              animate="visible"
-              type="submit"
-              className="w-full py-3 px-4 bg-slate-900 text-white font-bold rounded-md hover:bg-black active:bg-slate-800"
-            >
-              Sign In
-            </motion.button>
+            <AnimatePresence mode="wait">
+              {isLoading ? (
+                <motion.button
+                  disabled={isLoading}
+                  variants={childVariants}
+                  whileTap={{
+                    scale: 0.95,
+                    transition: {
+                      duration: 0.1,
+                      type: "spring",
+                      stiffness: 500,
+                    },
+                  }}
+                  whileHover={{
+                    scale: 1.02,
+                    transition: {
+                      duration: 0.2,
+                      type: "spring",
+                      stiffness: 500,
+                    },
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  type="submit"
+                  className="disabled:opacity-50 w-full py-3 px-4 bg-slate-900 text-white font-bold rounded-md hover:bg-black active:bg-slate-800"
+                >
+                  <Loader2 className="animate-spin" size={20} />
+                  Logging in...
+                </motion.button>
+              ) : (
+                <motion.button
+                  disabled={isLoading}
+                  variants={childVariants}
+                  whileTap={{
+                    scale: 0.95,
+                    transition: {
+                      duration: 0.1,
+                      type: "spring",
+                      stiffness: 500,
+                    },
+                  }}
+                  whileHover={{
+                    scale: 1.02,
+                    transition: {
+                      duration: 0.2,
+                      type: "spring",
+                      stiffness: 500,
+                    },
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  type="submit"
+                  className="disabled:opacity-50 w-full py-3 px-4 bg-slate-900 text-white font-bold rounded-md hover:bg-black active:bg-slate-800"
+                >
+                  Sign In
+                </motion.button>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.form>
       </motion.div>

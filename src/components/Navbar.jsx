@@ -14,6 +14,10 @@ const childVariants = {
   hidden: { opacity: 0, x: -10 },
   visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
 };
+const user = JSON.parse(localStorage.getItem("user"));
+const token = localStorage.getItem("token");
+const isAuthenticated = token !== null;
+const isAdmin = user && user.isAdmin === true;
 const Navbar = () => {
   return (
     <motion.div variants={variants} initial="hidden" animate="visible">
@@ -52,6 +56,39 @@ const Navbar = () => {
               Document Repository
             </motion.span>
           </motion.a>
+          {/* <a
+              href="#"
+              className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600"
+            >
+              Home
+            </a> */}
+          <motion.div
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            className="hidden md:flex items-center space-x-8"
+          >
+            {isAuthenticated && isAdmin && (
+              <>
+                <motion.button
+                  variants={childVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
+                >
+                  create User
+                </motion.button>
+                <motion.button
+                  variants={childVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
+                >
+                  Log out
+                </motion.button>
+              </>
+            )}
+          </motion.div>
 
           {/* <div className="hidden md:flex items-center space-x-8">
             <a href="#" className="text-sm font-semibold text-blue-600">
@@ -59,7 +96,7 @@ const Navbar = () => {
             </a>
             <a
               href="#"
-              className="text-sm font-semibold text-slate-500 hover:text-slate-900"
+              className="textsm font-semibold text-slate-500 hover:text-slate-900"
             >
               Features
             </a>
@@ -67,7 +104,7 @@ const Navbar = () => {
               href="#"
               className="text-sm font-semibold text-slate-500 hover:text-slate-900"
             >
-              Pricing
+              Pricing-
             </a>
             <a
               href="#"

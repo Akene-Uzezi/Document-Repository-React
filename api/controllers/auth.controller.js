@@ -18,6 +18,10 @@ const getLogin = (req, res) => {
 };
 
 const login = async (req, res) => {
+  if (!req.body) {
+    res.status(404).json({ message: "body not found" });
+    return;
+  }
   const email = req.body.email;
   const password = req.body.password;
   const user = await User.findByEmail(email);

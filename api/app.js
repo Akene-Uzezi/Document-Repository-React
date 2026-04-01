@@ -15,6 +15,7 @@ const db = require("./database/documentRepository.db");
 const app = express();
 // enable CORS for all routes
 app.use(cors());
+app.use(express.json());
 
 // middleware to parse incoming request bodies
 app.use(express.urlencoded({ extended: false }));
@@ -23,8 +24,8 @@ app.use("/view", express.static("uploads"));
 //dependency for session management
 
 // routes
-app.use(checkAuth);
 app.use(authRoutes);
+app.use(checkAuth);
 app.use(userRoutes);
 app.use("/api/admin", adminRoutes);
 
