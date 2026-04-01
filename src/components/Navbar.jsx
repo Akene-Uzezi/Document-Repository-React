@@ -19,6 +19,11 @@ const token = localStorage.getItem("token");
 const isAuthenticated = token !== null;
 const isAdmin = user && user.isAdmin === true;
 const Navbar = () => {
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
   return (
     <motion.div variants={variants} initial="hidden" animate="visible">
       <motion.nav
@@ -80,6 +85,7 @@ const Navbar = () => {
                 </motion.button>
                 <motion.button
                   variants={childVariants}
+                  onClick={logout}
                   initial="hidden"
                   animate="visible"
                   className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"

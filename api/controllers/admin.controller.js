@@ -1,10 +1,6 @@
 const User = require("../models/user.model");
 const db = require("../database/documentRepository.db");
-const getDashboard = async (req, res) => {
-  if (!req.session.user || !req.session.user.isAdmin) {
-    res.redirect("/login");
-    return;
-  }
+const getUsers = async (req, res) => {
   const users = await db.getDb().collection("users").find().toArray();
   const newUsers = users.map((user) => {
     return {
@@ -112,7 +108,7 @@ const restoreUser = async (req, res) => {
 };
 
 module.exports = {
-  getDashboard,
+  getUsers,
   getCreateUser,
   createUser,
   getUpdateUser,
