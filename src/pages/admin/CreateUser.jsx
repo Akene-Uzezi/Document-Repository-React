@@ -243,7 +243,7 @@ const CreateUser = () => {
                     initial="hidden"
                     animate="visible"
                     type="submit"
-                    className="disabled:opacity-50 w-full py-3 px-4 bg-slate-900 text-white font-bold rounded-md hover:bg-black active:bg-slate-800 flex items-center gap-2"
+                    className="disabled:opacity-90 w-full py-3 px-4 bg-slate-900 text-white font-bold rounded-md hover:bg-black active:bg-slate-800 flex items-center gap-2"
                   >
                     <Loader2 className="animate-spin" size={20} />
                     Creating User...
