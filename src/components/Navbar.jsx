@@ -70,7 +70,7 @@ const Navbar = () => {
               animate="visible"
               className="text-xl font-bold text-slate-900 tracking-tight"
             >
-              Document Repository
+              FileHub
             </motion.span>
           </motion.a>
           {/* <a

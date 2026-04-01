@@ -14,7 +14,7 @@ router.post("/update/:id", adminController.updateUser);
 
 router.get("/reset/:id", adminController.getResetUser);
 
-router.post("/reset/:id", adminController.resetPassword);
+router.post("/reset/:id", adminController.resetUser);
 
 router.get("/suspend/:id", adminController.suspendUser);
 

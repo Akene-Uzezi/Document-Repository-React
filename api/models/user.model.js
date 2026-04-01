@@ -15,6 +15,7 @@ class User {
   static generateAuthToken(user) {
     const token = jwt.sign(
       {
+        id: user._id,
         name: user.name,
         email: user.email,
         isAdmin: user.isAdmin,
@@ -125,21 +126,14 @@ class User {
       .findOne({ _id: new ObjectId(id) });
   }
 
-  static async updateUser(id, name, email) {
-    return await db
-      .getDb()
-      .collection("users")
-      .updateOne({ _id: new ObjectId(id) }, { $set: { name, email } });
-  }
-
-  static async updatePassword(id, password) {
+  static async updateUser(id, name, email, password) {
     const hashedPassword = await bcrypt.hash(password, 12);
     await db
       .getDb()
       .collection("users")
       .updateOne(
         { _id: new ObjectId(id) },
-        { $set: { password: hashedPassword } },
+        { $set: { name, email, password: hashedPassword } },
       );
   }
 

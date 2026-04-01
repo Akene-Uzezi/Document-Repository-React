@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Loader2, Pencil, Trash2, X, Ban, RotateCw } from "lucide-react";
+import { Loader2, Pencil, X, Ban, RotateCw } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 const AdminDashboard = () => {
   const token = localStorage.getItem("token");
@@ -7,6 +7,13 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [resetSuccess, setResetSuccess] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+  });
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -26,6 +33,33 @@ const AdminDashboard = () => {
     };
     fetchUsers();
   }, []);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleReset = async (user, e) => {
+    if (e) e.preventDefault();
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/admin/reset/${user.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      },
+    );
+    if (response.ok) {
+      setResetSuccess("User Reset Successfully");
+      setTimeout(() => {
+        setResetSuccess(null);
+        setIsModalOpen(false);
+      }, 4000);
+    } else {
+      const data = await response.json();
+      console.log(data);
+    }
+  };
   const handleSuspend = async (user) => {
     const token = localStorage.getItem("token");
     if (user.isSuspended) {
@@ -147,14 +181,29 @@ const AdminDashboard = () => {
                     </div>
 
                     {/* Modal Body / Form */}
-                    <form className="p-4 space-y-4">
+                    {resetSuccess && (
+                      <motion.p
+                        className="bg-green-400 px-20 py-3 mb-2 rounded-lg"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                      >
+                        {resetSuccess}
+                      </motion.p>
+                    )}
+                    <form
+                      onSubmit={(e) => handleReset(selectedUser, e)}
+                      className="p-4 space-y-4"
+                    >
                       <div>
                         <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
                           Full Name
                         </label>
                         <input
                           type="text"
-                          defaultValue={selectedUser?.name}
+                          value={formData.name}
+                          name="name"
+                          onChange={handleChange}
                           className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                       </div>
@@ -164,7 +213,31 @@ const AdminDashboard = () => {
                         </label>
                         <input
                           type="email"
-                          defaultValue={selectedUser?.email}
+                          value={formData.email}
+                          name="email"
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                          Password
+                        </label>
+                        <input
+                          type="password"
+                          name="password"
+                          onChange={handleChange}
+                          className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                          Confirm Password
+                        </label>
+                        <input
+                          type="password"
+                          name="confirmpassword"
+                          onChange={handleChange}
                           className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                       </div>

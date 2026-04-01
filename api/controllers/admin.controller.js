@@ -78,15 +78,16 @@ const getResetUser = async (req, res, next) => {
   res.status(200).json({ user });
 };
 
-const resetPassword = async (req, res) => {
+const resetUser = async (req, res) => {
   const { id } = req.params;
-  const { password, confirmpassword } = req.body;
+  const { name, email, password, confirmpassword } = req.body;
   const user = await User.findById(id);
   if (password !== confirmpassword) {
     res.status(400).json({ error: "Passwords do not match", user });
     return;
   }
-  await User.updatePassword(id, password);
+  await User.updateUser(id, name, email, password);
+  await User.sendUpdateUserEmail(user);
   await User.sendResetPasswordEmail(user, password);
   res.status(200).json({ message: "Password reset successfully" });
 };
@@ -114,7 +115,7 @@ module.exports = {
   getUpdateUser,
   updateUser,
   getResetUser,
-  resetPassword,
+  resetUser,
   suspendUser,
   restoreUser,
 };
