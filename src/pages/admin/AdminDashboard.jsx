@@ -5,6 +5,7 @@ const AdminDashboard = () => {
   const token = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [update, setUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [resetSuccess, setResetSuccess] = useState(null);
@@ -38,26 +39,33 @@ const AdminDashboard = () => {
   };
   const handleReset = async (user, e) => {
     if (e) e.preventDefault();
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/admin/reset/${user.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    setUpdate(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/reset/${user.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      },
-    );
-    if (response.ok) {
-      setResetSuccess("User Reset Successfully");
-      setTimeout(() => {
-        setResetSuccess(null);
-        setIsModalOpen(false);
-      }, 4000);
-    } else {
-      const data = await response.json();
-      console.log(data);
+      );
+      if (response.ok) {
+        setResetSuccess("User Reset Successfully");
+        setTimeout(() => {
+          setResetSuccess(null);
+          setIsModalOpen(false);
+        }, 4000);
+      } else {
+        const data = await response.json();
+        console.log(data);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setUpdate(null);
     }
   };
   const handleSuspend = async (user) => {
@@ -252,12 +260,29 @@ const AdminDashboard = () => {
                         >
                           Cancel
                         </button>
-                        <button
-                          type="submit"
-                          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg"
-                        >
-                          Save Changes
-                        </button>
+                        <AnimatePresence mode="wait">
+                          {update ? (
+                            <>
+                              <motion.button
+                                disabled={update}
+                                type="submit"
+                                className="disabled:opacity-90 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg flex item-center gap-2"
+                              >
+                                <Loader2 className="animate-spin" size={20} />
+                                saving...
+                              </motion.button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                type="submit"
+                                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg"
+                              >
+                                Save Changes
+                              </button>
+                            </>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </form>
                   </motion.div>
