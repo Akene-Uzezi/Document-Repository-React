@@ -53,6 +53,7 @@ const InputForm = () => {
       const resdata = await response.json();
       if (response.ok) {
         setSuccess(resdata.message);
+
         setTimeout(() => {
           setSuccess(null);
           setFile(null);

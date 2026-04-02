@@ -8,6 +8,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import image from "/img/no files.png";
+import { tbody } from "motion/react-client";
 const RecentFiles = () => {
   const [loading, setLoading] = useState(false);
   const [recents, setRecents] = useState([]);
@@ -115,19 +116,27 @@ const RecentFiles = () => {
                 </tbody>
               )}
               {recents.length === 0 && (
-                <div className="py-20 text-center">
-                  <img
-                    src={image}
-                    alt="No files"
-                    className="mx-auto w-32 h-auto opacity-75 mb-6 object-cover"
-                  />
-                  <h2 className="text-xl font-bold text-gray-800">
-                    Quiet in here...
-                  </h2>
-                  <p className="text-gray-500 mt-2">
-                    We couldn't find any recent uploads for your account.
-                  </p>
-                </div>
+                <tbody>
+                  <tr>
+                    <td>
+                      <img
+                        src={image}
+                        alt="No files"
+                        className="mx-auto w-32 h-auto opacity-75 mb-6 object-cover"
+                      />
+                    </td>
+                    <td>
+                      <h2 className="text-xl font-bold text-gray-800">
+                        Quiet in here...
+                      </h2>
+                    </td>
+                    <td>
+                      <p className="text-gray-500 mt-2">
+                        We couldn't find any recent uploads for your account.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
               )}
             </>
           )}
