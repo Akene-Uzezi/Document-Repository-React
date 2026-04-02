@@ -75,10 +75,7 @@ const getArchive = async (req, res) => {
   }
   const files = await Upload.getUserFilesInOrder(req.user.id);
   const groupedFiles = await Upload.groupAllFiles(files);
-  res.render("user/archived.ejs", {
-    user: req.user.name,
-    files: groupedFiles,
-  });
+  res.status(200).json({ user: req.user.name, files: groupedFiles });
 };
 
 const getFiles = async (req, res) => {

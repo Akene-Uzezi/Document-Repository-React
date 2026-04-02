@@ -24,6 +24,9 @@ const Navbar = () => {
   const handleCreateUser = () => {
     navigate("/admin/create-user");
   };
+  const handleArchive = () => {
+    navigate("/archive");
+  };
   const getDashboard = () => {
     if (isAdmin) {
       navigate("/admin/dashboard");
@@ -118,6 +121,15 @@ const Navbar = () => {
             )}
             {isAuthenticated && !isAdmin && (
               <>
+                <motion.button
+                  variants={childVariants}
+                  onClick={handleArchive}
+                  initial="hidden"
+                  animate="visible"
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-black-600 hover:text-slate-900 hover:bg-blue-600 cursor-pointer"
+                >
+                  Archive
+                </motion.button>
                 <motion.button
                   variants={childVariants}
                   onClick={logout}
