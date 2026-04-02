@@ -29,7 +29,7 @@ class Uploads {
   }
 
   static async upload(fileData) {
-    await db.getDb().collection("uploads").insertOne(fileData);
+    if (await db.getDb().collection("uploads").insertOne(fileData)) return true;
   }
 
   static async findFileById(id) {

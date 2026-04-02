@@ -1,5 +1,10 @@
+import InputForm from "../components/InputForm";
 const Dashboard = () => {
-  return <div></div>;
+  return (
+    <div>
+      <InputForm />
+    </div>
+  );
 };
 
 export default Dashboard;

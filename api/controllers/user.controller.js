@@ -5,7 +5,7 @@ const uploadFile = async (req, res) => {
   const sizeKB = (req.file.size / 1024).toFixed(2);
   const sizeMB = (req.file.size / (1024 * 1024)).toFixed(2);
   const fileData = {
-    user: req.session.user.id,
+    user: req.user.id,
     name: req.file.originalname,
     mimetype: req.file.mimetype,
     path: req.file.path,
@@ -13,8 +13,12 @@ const uploadFile = async (req, res) => {
     sizeMB,
     date: new Date(),
   };
-  await Upload.upload(fileData);
-  res.status(200).json({ message: "File uploaded successfully" });
+  const uploaded = await Upload.upload(fileData);
+  if (uploaded) {
+    res.status(200).json({ message: "File uploaded successfully" });
+  } else {
+    res.status(400).json({ error: "Failed to upload file to database" });
+  }
 };
 
 const downloadFile = async (req, res) => {

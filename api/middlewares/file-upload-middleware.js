@@ -1,5 +1,4 @@
 const multer = require("multer");
-const uuid = require("uuid").v4;
 const upload = multer({
   storage: multer.diskStorage({
     destination: "uploads",
@@ -7,6 +6,9 @@ const upload = multer({
       cb(null, file.originalname);
     },
   }),
+  limits: {
+    fileSize: 50 * 1024 * 1024,
+  },
 });
 
 const configuredMulterMiddleware = upload.single("file");
