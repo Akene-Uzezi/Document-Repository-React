@@ -52,6 +52,32 @@ const RecentFiles = () => {
       console.log(err);
     }
   };
+  const handleDownload = async (e, fileid, fileName) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/download/${fileid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to download");
+      console.log("Downloading ...");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName || "downloadedFile");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-10">
@@ -121,7 +147,13 @@ const RecentFiles = () => {
                         >
                           <Eye size={18} />
                         </button>
-                        <button className="text-gray-400 hover:text-blue-600 mr-3 cursor-pointer">
+                        <button
+                          id="down"
+                          onClick={(e) =>
+                            handleDownload(e, file._id.toString(), file.name)
+                          }
+                          className="text-gray-400 hover:text-blue-600 mr-3 cursor-pointer"
+                        >
                           <Download size={18} />
                         </button>
                         <button className="text-gray-400 hover:text-red-600 cursor-pointer">

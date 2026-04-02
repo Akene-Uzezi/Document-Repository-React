@@ -29,7 +29,7 @@ const downloadFile = async (req, res) => {
     return;
   }
   const filePath = path.join(__dirname, "..", file.path.toString());
-  res.download(filePath, file.name);
+  res.sendFile(filePath);
 };
 
 const viewFile = async (req, res) => {
