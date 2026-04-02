@@ -78,6 +78,25 @@ const RecentFiles = () => {
       console.log(err);
     }
   };
+  const handleDelete = async (e, fileid) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/delete/${fileid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to delete file");
+      const data = await response.json();
+      console.log(data);
+      fetchResents();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-10">
@@ -156,7 +175,10 @@ const RecentFiles = () => {
                         >
                           <Download size={18} />
                         </button>
-                        <button className="text-gray-400 hover:text-red-600 cursor-pointer">
+                        <button
+                          onClick={(e) => handleDelete(e, file._id.toString())}
+                          className="text-gray-400 hover:text-red-600 cursor-pointer"
+                        >
                           <Trash2 size={18} />
                         </button>
                       </td>
