@@ -1,14 +1,7 @@
-import {
-  FileText,
-  Download,
-  Trash2,
-  ExternalLink,
-  Loader2,
-} from "lucide-react";
+import { FileText, Download, Trash2, Loader2, Eye } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import image from "/img/no files.png";
-import { tbody } from "motion/react-client";
 const RecentFiles = () => {
   const [loading, setLoading] = useState(false);
   const [recents, setRecents] = useState([]);
@@ -37,7 +30,28 @@ const RecentFiles = () => {
   useEffect(() => {
     fetchResents();
   }, []);
-  console.log(recents);
+  const handleView = async (fileid) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/view/${fileid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to fetch file");
+
+      const blob = await response.blob();
+      const fileUrl = URL.createObjectURL(blob);
+      window.open(fileUrl, "_blank");
+      setTimeout(() => {
+        URL.revokeObjectURL(fileUrl);
+      }, 10000);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm mt-10">
@@ -101,8 +115,11 @@ const RecentFiles = () => {
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-4 py-4 text-right">
-                        <button className="text-green-400 hover:text-green-600 mr-3 cursor-pointer">
-                          <ExternalLink size={18} />
+                        <button
+                          onClick={() => handleView(file._id.toString())}
+                          className="text-green-400 hover:text-green-600 mr-3 cursor-pointer"
+                        >
+                          <Eye size={18} />
                         </button>
                         <button className="text-gray-400 hover:text-blue-600 mr-3 cursor-pointer">
                           <Download size={18} />
