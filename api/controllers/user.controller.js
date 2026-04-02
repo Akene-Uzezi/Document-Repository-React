@@ -7,7 +7,7 @@ const uploadFile = async (req, res) => {
   const fileData = {
     user: req.user.id,
     name: req.file.originalname,
-    mimetype: req.file.mimetype,
+    type: req.file.mimetype,
     path: req.file.path,
     sizeKB,
     sizeMB,
@@ -81,10 +81,16 @@ const getArchive = async (req, res) => {
   });
 };
 
+const getFiles = async (req, res) => {
+  const files = await Upload.getRecentFiles(req.user.id);
+  res.status(200).json({ user: req.user.name, files });
+};
+
 module.exports = {
   uploadFile,
   downloadFile,
   viewFile,
   deleteFile,
   getArchive,
+  getFiles,
 };

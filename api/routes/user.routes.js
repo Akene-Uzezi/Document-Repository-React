@@ -13,4 +13,6 @@ router.get("/api/delete/:id", userController.deleteFile);
 
 router.get("/api/archive", userController.getArchive);
 
+router.get("/api/files", userController.getFiles);
+
 module.exports = router;

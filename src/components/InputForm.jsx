@@ -150,14 +150,6 @@ const InputForm = () => {
                   </motion.span>{" "}
                   or drag and drop
                 </motion.p>
-                <motion.p
-                  variants={childVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="text-xs text-gray-500"
-                >
-                  PNG, JPG or PDF (MAX. 800x400px)
-                </motion.p>
               </>
             )}
           </motion.div>
@@ -171,7 +163,7 @@ const InputForm = () => {
               type="file"
               name="file"
               className="hidden"
-              accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx,
+              accept="image/*, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx,
           application/pdf,
           application/msword,
           application/vnd.openxmlformats-officedocument.wordprocessingml.document,
