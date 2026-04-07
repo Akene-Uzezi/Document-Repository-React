@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const checkAuth = require("./middlewares/cheackAuth");
+require("dotenv").config();
 //middlewares
 const notFoundMiddleware = require("./middlewares/not-found");
 const serverErrorMiddleware = require("./middlewares/server-error");
@@ -14,14 +15,11 @@ const userRoutes = require("./routes/user.routes");
 const db = require("./database/documentRepository.db");
 const app = express();
 // enable CORS for all routes
-app.use(cors());
+app.use(cors({ origin: process.env.frontend }));
 app.use(express.json({ limit: "50mb" }));
 
 // middleware to parse incoming request bodies
 app.use(express.urlencoded({ extended: false }));
-// for rendering static files like css, js, images
-app.use("/view", express.static("uploads"));
-//dependency for session management
 
 // routes
 app.use(authRoutes);
