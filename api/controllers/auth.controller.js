@@ -29,8 +29,8 @@ const login = async (req, res) => {
     res.status(401).json({ error: "Invalid username or password" });
     return;
   }
-  if (user.suspended) {
-    res.status(403).json({ error: "This account has been suspended" });
+  if (user.isSuspended) {
+    res.status(401).json({ error: "This account has been suspended" });
     return;
   }
   let token;

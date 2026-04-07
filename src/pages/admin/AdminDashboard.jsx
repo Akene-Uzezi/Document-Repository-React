@@ -1,6 +1,24 @@
 import { useState, useEffect } from "react";
 import { Loader2, Pencil, X, Ban, RotateCw } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // Delay between each item
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3 },
+  },
+};
 const AdminDashboard = () => {
   const token = localStorage.getItem("token");
   const [users, setUsers] = useState([]);
@@ -106,65 +124,72 @@ const AdminDashboard = () => {
           </div>
 
           {/* 2. THE LOOP */}
-          <div className="divide-y divide-slate-50">
-            {users.map((user) => (
-              <div
-                key={user.id}
-                className="flex items-center justify-between p-3 hover:bg-slate-50 transition-colors group"
-              >
-                {/* User Info */}
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {user.name?.charAt(0).toUpperCase()}
+          <AnimatePresence>
+            <motion.div
+              variants={containerVariants}
+              className="divide-y divide-slate-50"
+            >
+              {users.map((user) => (
+                <motion.div
+                  variants={itemVariants}
+                  key={user.id}
+                  className="flex items-center justify-between p-3 hover:bg-slate-50 transition-colors group"
+                >
+                  {/* User Info */}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="truncate">
+                      <h4 className="text-sm font-medium text-slate-900 truncate">
+                        {user.name}
+                      </h4>
+                      <p className="text-xs text-slate-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
                   </div>
-                  <div className="truncate">
-                    <h4 className="text-sm font-medium text-slate-900 truncate">
-                      {user.name}
-                    </h4>
-                    <p className="text-xs text-slate-500 truncate">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
 
-                {/* Actions (Pencil & Trash2) */}
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => {
-                      handleOpenModal(user);
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
-                  >
-                    <Pencil size={14} />
-                  </button>
-                  {!user.isAdmin && (
-                    <>
-                      {user.isSuspended ? (
-                        <motion.button
-                          whileTap={{ rotate: 360 }}
-                          onClick={() => {
-                            handleSuspend(user);
-                          }}
-                          className="p-1.5 text-slate-400 hover:text-green-600 hover:bg-red-50 rounded-md transition-colors"
-                        >
-                          <RotateCw size={14} />
-                        </motion.button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            handleSuspend(user);
-                          }}
-                          className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                        >
-                          <Ban size={14} />
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                  {/* Actions (Pencil & Trash2) */}
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => {
+                        handleOpenModal(user);
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-md transition-colors"
+                    >
+                      <Pencil size={14} />
+                    </button>
+                    {!user.isAdmin && (
+                      <>
+                        {user.isSuspended ? (
+                          <motion.button
+                            whileTap={{ rotate: 360 }}
+                            onClick={() => {
+                              handleSuspend(user);
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-green-600 hover:bg-red-50 rounded-md transition-colors"
+                          >
+                            <RotateCw size={14} />
+                          </motion.button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              handleSuspend(user);
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                          >
+                            <Ban size={14} />
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
           {isModalOpen && (
             <>
               <AnimatePresence>
