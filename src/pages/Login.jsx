@@ -48,6 +48,7 @@ const Login = () => {
           } else {
             navigate("/dashboard");
           }
+          window.dispatchEvent(new Event("authChange"));
         }, 2000);
       }
       if (!response.ok) {
