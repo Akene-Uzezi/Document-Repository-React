@@ -32,9 +32,11 @@ app.use(notFoundMiddleware);
 // internal server error handler
 app.use(serverErrorMiddleware);
 
+const PORT = process.env.PORT || 3000;
+
 db.connect()
   .then(() => {
-    app.listen(3000, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log("connected to database and started the server");
     });
   })

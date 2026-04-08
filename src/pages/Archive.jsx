@@ -136,7 +136,7 @@ const Archive = () => {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleView(file._id)}
-                            className="p-1 text-gray-400 hover:text-green-500"
+                            className="p-1 text-gray-400 hover:text-green-500 cursor-pointer"
                           >
                             <Eye size={16} />
                           </button>
@@ -144,7 +144,7 @@ const Archive = () => {
                             onClick={(e) =>
                               handleDownload(e, file._id, file.name)
                             }
-                            className="p-1 text-gray-400 hover:text-blue-500"
+                            className="p-1 text-gray-400 hover:text-blue-500 cursor-pointer"
                           >
                             <Download size={16} />
                           </button>
