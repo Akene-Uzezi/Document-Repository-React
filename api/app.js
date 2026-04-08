@@ -20,6 +20,7 @@ app.use(
     origin: process.env.frontend,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200,
   }),
 );
 app.use(express.json({ limit: "50mb" }));
