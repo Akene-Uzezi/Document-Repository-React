@@ -15,7 +15,20 @@ const userRoutes = require("./routes/user.routes");
 const db = require("./database/documentRepository.db");
 const app = express();
 // enable CORS for all routes
-app.use(cors());
+const CLIENT_URL = process.env.frontend || "http://localhost:5173";
+const corsOptions = {
+  origin: (origin, callback) => {
+    // allow requests with no origin like mobile apps or curl
+    if (!origin) return callback(null, true);
+    // allow the configured client
+    if (origin === CLIENT_URL) return callback(null, true);
+    // otherwise block
+    return callback(new Error("Not allowed by CORS"), false);
+  },
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
 
 // middleware to parse incoming request bodies
