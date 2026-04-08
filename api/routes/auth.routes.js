@@ -12,4 +12,8 @@ router.get("/api/logout", authController.getLogout);
 
 router.get("/api/dashboard", authController.getDashboard);
 
+router.get("/api/health", (req, res) =>
+  res.status(200).json({ message: "server kept alive" }),
+);
+
 module.exports = router;

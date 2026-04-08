@@ -32,6 +32,26 @@ app.use(notFoundMiddleware);
 // internal server error handler
 app.use(serverErrorMiddleware);
 
+// Replace with your actual Render URL
+const API_URL = "https://document-repository-react.onrender.com/api/health";
+
+const startKeepAlive = () => {
+  // 600000ms = 10 minutes
+  setInterval(async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (response.ok) {
+        console.log(`Keep-alive success: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Keep-alive failed:", error.message);
+    }
+  }, 600000);
+};
+
+// Start the loop
+startKeepAlive();
+
 const PORT = process.env.PORT || 3000;
 
 db.connect()
