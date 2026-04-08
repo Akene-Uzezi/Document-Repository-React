@@ -15,14 +15,7 @@ const userRoutes = require("./routes/user.routes");
 const db = require("./database/documentRepository.db");
 const app = express();
 // enable CORS for all routes
-app.use(
-  cors({
-    origin: process.env.frontend,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    optionsSuccessStatus: 200,
-  }),
-);
+app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
 // middleware to parse incoming request bodies
