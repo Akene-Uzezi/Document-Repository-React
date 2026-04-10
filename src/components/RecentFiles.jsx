@@ -2,31 +2,10 @@ import { FileText, Download, Trash2, Loader2, Eye } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import image from "/img/no files.png";
+import useFetchRecents from "./FetchRecents";
 const RecentFiles = () => {
-  const [loading, setLoading] = useState(false);
-  const [recents, setRecents] = useState([]);
   const token = localStorage.getItem("token");
-
-  const fetchResents = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/files`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setRecents(data.files);
-      } else {
-        console.log(data);
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { recents, loading, fetchResents } = useFetchRecents(token);
   useEffect(() => {
     fetchResents();
   }, []);

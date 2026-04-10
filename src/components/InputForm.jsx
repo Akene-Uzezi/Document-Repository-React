@@ -2,6 +2,7 @@ import { CloudUploadIcon } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import useFetchRecents from "./FetchRecents";
 const parentVariant = {
   hidden: { opacity: 0, y: -30 },
   visible: {
@@ -15,9 +16,9 @@ const childVariants = {
   visible: { opacity: 1, y: 0 },
 };
 const InputForm = () => {
-  // states
+  const token = localStorage.getItem("token");
+  const { fetchResents, loading, setLoading } = useFetchRecents(token);
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const handleFileChange = (e) => {
@@ -53,10 +54,12 @@ const InputForm = () => {
       const resdata = await response.json();
       if (response.ok) {
         setSuccess(resdata.message);
+        fetchResents();
 
         setTimeout(() => {
           setSuccess(null);
           setFile(null);
+          window.location.reload();
         }, 3000);
       } else {
         setError(resdata.error);
