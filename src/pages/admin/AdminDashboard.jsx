@@ -296,9 +296,7 @@ const AdminDashboard = () => {
                       <div className="flex justify-end gap-3 pt-2">
                         <button
                           type="button"
-                          onClick={() => {
-                            setIsModalOpen(false);
-                          }}
+                          onClick={closeModal}
                           className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
                         >
                           Cancel
