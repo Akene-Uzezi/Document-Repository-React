@@ -7,6 +7,12 @@ const Archive = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState(""); // Default to empty string
   const token = localStorage.getItem("token");
+  const [filter, setFilter] = useState('All')
+  const handleClick = (e,type) => {
+    e.stopPropagation()
+    setFilter((prevFilter) => (prevFilter === type ? 'All' : type))
+    console.log(filter)
+  }
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -33,30 +39,44 @@ const Archive = () => {
   useEffect(() => {
     fetchFiles();
   }, []);
-
+const EXTENSION_MAP = {
+  PDF: ['pdf'],
+  Word: ['doc', 'docx'],
+  Excel: ['xls', 'xlsx', 'csv'],
+  Image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+};
   // DERIVED STATE: Filter the nested object structure
   // We use useMemo so this only recalculates when 'search' or 'groupedFiles' changes
-  const filteredGroupedFiles = useMemo(() => {
-    if (!search) return groupedFiles;
+const filteredGroupedFiles = useMemo(() => {
+  return Object.entries(groupedFiles).reduce((acc, [month, days]) => {
+    const filteredDays = Object.entries(days).reduce((dayAcc, [day, files]) => {
+      
+      const matchingFiles = files.filter((file) => {
+        // 1. Search Check
+        const matchesSearch = file.name.toLowerCase().includes((search || "").toLowerCase());
+        
+        // 2. Extension Check
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        
+        const matchesFilter = 
+          filter === "All" || 
+          (EXTENSION_MAP[filter] && EXTENSION_MAP[filter].includes(fileExtension));
 
-    return Object.entries(groupedFiles).reduce((acc, [month, days]) => {
-      const filteredDays = Object.entries(days).reduce((dayAcc, [day, files]) => {
-        const matchingFiles = files.filter((file) =>
-          file.name.toLowerCase().includes(search.toLowerCase())
-        );
+        return matchesSearch && matchesFilter;
+      });
 
-        if (matchingFiles.length > 0) {
-          dayAcc[day] = matchingFiles;
-        }
-        return dayAcc;
-      }, {});
-
-      if (Object.keys(filteredDays).length > 0) {
-        acc[month] = filteredDays;
+      if (matchingFiles.length > 0) {
+        dayAcc[day] = matchingFiles;
       }
-      return acc;
+      return dayAcc;
     }, {});
-  }, [search, groupedFiles]);
+
+    if (Object.keys(filteredDays).length > 0) {
+      acc[month] = filteredDays;
+    }
+    return acc;
+  }, {});
+}, [search, filter, groupedFiles]); // Add 'filter' here!
 
   const handleView = async (fileid) => {
     try {
@@ -152,6 +172,7 @@ const Archive = () => {
           {["All", "PDF", "Word", "Excel", "Image"].map((type) => (
             <button
               key={type}
+              onClick={(e) => handleClick(e, type)}
               className="px-3 py-1.5 rounded-md font-medium transition-colors text-gray-500 hover:text-gray-700 hover:bg-white/50 cursor-pointer"
             >
               {type}
