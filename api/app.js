@@ -46,7 +46,7 @@ app.use(notFoundMiddleware);
 app.use(serverErrorMiddleware);
 
 // Replace with your actual Render URL
-const API_URL = "https://document-repository-react.onrender.com/api/health";
+const API_URL = 'http:localhost:3000/api/health' || "https://document-repository-react.onrender.com/api/health";
 
 const startKeepAlive = () => {
   // 600000ms = 10 minutes
