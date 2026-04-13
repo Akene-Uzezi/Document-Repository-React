@@ -152,7 +152,7 @@ const Archive = () => {
           {["All", "PDF", "Word", "Excel", "Image"].map((type) => (
             <button
               key={type}
-              className="px-3 py-1.5 rounded-md font-medium transition-colors text-gray-500 hover:text-gray-700 hover:bg-white/50"
+              className="px-3 py-1.5 rounded-md font-medium transition-colors text-gray-500 hover:text-gray-700 hover:bg-white/50 cursor-pointer"
             >
               {type}
             </button>
