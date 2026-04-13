@@ -33,23 +33,23 @@ const AdminDashboard = () => {
     password: "",
     confirmpassword: "",
   });
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/users`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      const data = await response.json();
+      setUsers(data.users);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/admin/users`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
-        const data = await response.json();
-        setUsers(data.users);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUsers();
   }, []);
   const handleChange = (e) => {
@@ -88,16 +88,17 @@ const AdminDashboard = () => {
   };
   const handleSuspend = async (user) => {
     const token = localStorage.getItem("token");
+    setLoading(true)
     if (user.isSuspended) {
       await fetch(`${import.meta.env.VITE_API_URL}/admin/restore/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      window.location.reload();
+      fetchUsers()
     } else {
       await fetch(`${import.meta.env.VITE_API_URL}/admin/suspend/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      window.location.reload();
+      fetchUsers()
     }
   };
   const handleOpenModal = (user) => {
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="truncate">
                       <h4 className="text-sm font-medium text-slate-900 truncate">
-                        {user.name}
+                        {user.name} {user.isSuspended && (<i className="text-slate-500">(suspended)</i>)}
                       </h4>
                       <p className="text-xs text-slate-500 truncate">
                         {user.email}
