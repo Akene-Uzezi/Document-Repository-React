@@ -103,7 +103,24 @@ const AdminDashboard = () => {
   };
   const handleOpenModal = (user) => {
     setSelectedUser(user);
+    // Fill the form state with the user's current data
+    setFormData({
+      name: user.name || "",
+      email: user.email || "",
+      password: "", // Keep these empty for security
+      confirmpassword: "",
+    });
     setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmpassword: "",
+    });
   };
   return (
     <div>
@@ -207,7 +224,7 @@ const AdminDashboard = () => {
                         Edit User
                       </h2>
                       <button
-                        onClick={() => setIsModalOpen(false)}
+                        onClick={closeModal}
                         className="text-slate-400 hover:text-slate-600"
                       >
                         <X size={20} />
