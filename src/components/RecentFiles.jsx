@@ -281,7 +281,7 @@ const RecentFiles = () => {
                             </span>
                           </div>
                           <button
-                            // onClick={() => handleShareWithUser(foundUser._id)}
+                            onClick={() => handleShareWithUser(foundUser._id)}
                             className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-green-700 transition-colors"
                           >
                             <Share2 size={14} /> Send
