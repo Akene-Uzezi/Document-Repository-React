@@ -1,4 +1,4 @@
-import { FileText, Download, Trash2, Loader2, Eye } from "lucide-react";
+import { FileText, Download, Trash2, Loader2, Eye, Share2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import image from "/img/no files.png";
@@ -147,6 +147,13 @@ const RecentFiles = () => {
                         className="cursor-pointer flex items-center gap-1 text-xs text-gray-400 hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition-colors"
                       >
                         <Download size={15} /> Download
+                      </button>
+                      <button
+                        id="share"
+                        title="Share"
+                        className="cursor-pointer flex items-center gap-1 text-xs text-gray-400 hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition-colors"
+                      >
+                        <Share2 size={15} /> Share
                       </button>
                       <button
                         onClick={(e) => handleDelete(e, file._id.toString())}
