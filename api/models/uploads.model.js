@@ -71,6 +71,16 @@ class Uploads {
       return acc;
     }, {});
   }
+
+  static async shareFile(fileId, userId) {
+    return await db
+      .getDb()
+      .collection("uploads")
+      .updateOne(
+        { _id: new ObjectId(fileId) },
+        { $addToSet: { sharedWith: new ObjectId(userId) } },
+      );
+  }
 }
 
 module.exports = Uploads;

@@ -17,4 +17,6 @@ router.get("/api/files", userController.getFiles);
 
 router.get("/api/user/:email", userController.findUser);
 
+router.post("/api/share/:id", userController.shareFile);
+
 module.exports = router;

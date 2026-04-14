@@ -13,6 +13,7 @@ const uploadFile = async (req, res) => {
     sizeKB,
     sizeMB,
     date: new Date(),
+    sharedWith: [],
   };
   const uploaded = await Upload.upload(fileData);
   if (uploaded) {
@@ -86,10 +87,21 @@ const getFiles = async (req, res) => {
 
 const findUser = async (req, res) => {
   const { email } = req.params;
-  const user = await User.findByEmail(email.trim());
+  const user = await User.findUserByEmail(email.trim());
   user
     ? res.status(200).json({ message: "user found", user: user })
     : res.status(404).json({ message: "user not found" });
+};
+
+const shareFile = async (req, res) => {
+  const { userId } = req.body;
+  const file = await Upload.findFileById(req.params.id);
+  if (file.user.toString() !== req.user.id)
+    return res.status(403).json({ message: "only users can share files" });
+
+  (await Upload.shareFile(req.params.id, userId))
+    ? res.status(200).json({ message: "File shared" })
+    : res.status(401).json({ message: "Error sharing file" });
 };
 
 module.exports = {
@@ -100,4 +112,5 @@ module.exports = {
   getArchive,
   getFiles,
   findUser,
+  shareFile,
 };

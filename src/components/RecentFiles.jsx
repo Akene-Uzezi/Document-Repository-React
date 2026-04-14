@@ -90,7 +90,7 @@ const RecentFiles = () => {
     }
   };
   const handleSearch = async () => {
-    if (userSearch === "") console.log("search");
+    if (userSearch === "") return console.log("search");
     setIsSearching(true);
     try {
       const response = await fetch(
@@ -110,6 +110,29 @@ const RecentFiles = () => {
       console.log(err);
     } finally {
       setIsSearching(false);
+    }
+  };
+  const handleShareWithUser = async (userID) => {
+    const data = {
+      userID,
+    };
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/share/${selectedFile._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        },
+      );
+      const resdata = await response.json();
+      response.ok ? console.log(resdata.message) : console.log(resdata.message);
+      setIsShareModalOpen(false);
+    } catch (err) {
+      console.log(err);
     }
   };
   return (
@@ -323,7 +346,7 @@ const RecentFiles = () => {
                 <div className="p-4 bg-slate-50 flex justify-end">
                   <button
                     onClick={() => setIsShareModalOpen(false)}
-                    className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                    className="cursor-pointer px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
                   >
                     Close
                   </button>
