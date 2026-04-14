@@ -112,8 +112,10 @@ class User {
   }
 
   static async findByEmail(email) {
-    const user = await db.getDb().collection("users").findOne({ email: email });
-    return user;
+    return await db
+      .getDb()
+      .collection("users")
+      .findOne({ email: email }, { projection: { password: 0 } });
   }
 
   static async comparePassword(plainPassword, hashedPassword) {

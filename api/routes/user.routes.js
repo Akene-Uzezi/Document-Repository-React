@@ -15,4 +15,6 @@ router.get("/api/archive", userController.getArchive);
 
 router.get("/api/files", userController.getFiles);
 
+router.get("/api/user/:email", userController.findUser);
+
 module.exports = router;

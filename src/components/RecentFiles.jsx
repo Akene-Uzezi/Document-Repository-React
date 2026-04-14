@@ -89,6 +89,29 @@ const RecentFiles = () => {
       console.log(err);
     }
   };
+  const handleSearch = async () => {
+    if (userSearch === "") console.log("search");
+    setIsSearching(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/user/${userSearch}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await response.json();
+      if (response.ok) {
+        const user = data.user;
+        setFoundUser(user);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
   return (
     <>
       <div className="mt-10 max-w-5xl mx-auto px-6">
@@ -245,12 +268,11 @@ const RecentFiles = () => {
                           value={userSearch}
                           onChange={(e) => setUserSearch(e.target.value)}
                           className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                          required
                         />
                         <button
-                          onClick={() => {
-                            /* Add your search function here */
-                          }}
-                          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                          onClick={handleSearch}
+                          className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
                         >
                           Search
                         </button>
@@ -282,7 +304,7 @@ const RecentFiles = () => {
                           </div>
                           <button
                             onClick={() => handleShareWithUser(foundUser._id)}
-                            className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-green-700 transition-colors"
+                            className="cursor-pointer flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-green-700 transition-colors"
                           >
                             <Share2 size={14} /> Send
                           </button>

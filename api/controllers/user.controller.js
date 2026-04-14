@@ -1,4 +1,5 @@
 const Upload = require("../models/uploads.model");
+const User = require("../models/user.model");
 const path = require("path");
 const fs = require("fs");
 const uploadFile = async (req, res) => {
@@ -83,6 +84,14 @@ const getFiles = async (req, res) => {
   res.status(200).json({ user: req.user.name, files });
 };
 
+const findUser = async (req, res) => {
+  const { email } = req.params;
+  const user = await User.findByEmail(email.trim());
+  user
+    ? res.status(200).json({ message: "user found", user: user })
+    : res.status(404).json({ message: "user not found" });
+};
+
 module.exports = {
   uploadFile,
   downloadFile,
@@ -90,4 +99,5 @@ module.exports = {
   deleteFile,
   getArchive,
   getFiles,
+  findUser,
 };
