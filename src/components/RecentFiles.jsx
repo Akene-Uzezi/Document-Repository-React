@@ -1,9 +1,22 @@
-import { FileText, Download, Trash2, Loader2, Eye, Share2 } from "lucide-react";
+import {
+  FileText,
+  Download,
+  Trash2,
+  Loader2,
+  Eye,
+  Share2,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import image from "/img/no files.png";
 import useFetchRecents from "./FetchRecents";
 const RecentFiles = () => {
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [userSearch, setUserSearch] = useState("");
+  const [foundUser, setFoundUser] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
   const token = localStorage.getItem("token");
   const { recents, loading, fetchResents } = useFetchRecents(token);
   useEffect(() => {
@@ -150,6 +163,10 @@ const RecentFiles = () => {
                       </button>
                       <button
                         id="share"
+                        onClick={() => {
+                          setSelectedFile(file);
+                          setIsShareModalOpen(true);
+                        }}
                         title="Share"
                         className="cursor-pointer flex items-center gap-1 text-xs text-gray-400 hover:text-blue-600 hover:bg-blue-50 px-2 py-1 rounded-md transition-colors"
                       >
@@ -185,6 +202,114 @@ const RecentFiles = () => {
             )}
           </>
         )}
+        <AnimatePresence>
+          {isShareModalOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between p-4 border-b border-slate-100">
+                  <h2 className="text-lg font-semibold text-slate-800">
+                    Share File
+                  </h2>
+                  <button
+                    onClick={() => setIsShareModalOpen(false)}
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-4">
+                  <p className="text-xs text-gray-500 mb-4 italic">
+                    Sharing:{" "}
+                    <span className="font-bold text-gray-700">
+                      {selectedFile?.name}
+                    </span>
+                  </p>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">
+                        Search User by Email
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="email"
+                          placeholder="user@example.com"
+                          value={userSearch}
+                          onChange={(e) => setUserSearch(e.target.value)}
+                          className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                        />
+                        <button
+                          onClick={() => {
+                            /* Add your search function here */
+                          }}
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
+                          Search
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Placeholder for Search Results */}
+                    <div className="min-h-[100px] border-2 border-dashed border-slate-100 rounded-lg flex items-center justify-center">
+                      {isSearching ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <Loader2
+                            className="animate-spin text-blue-500"
+                            size={20}
+                          />
+                          <p className="text-xs text-slate-400">
+                            Searching for user...
+                          </p>
+                        </div>
+                      ) : foundUser ? (
+                        /* Found User Row */
+                        <div className="w-full flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-200">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-slate-700">
+                              {foundUser.name}
+                            </span>
+                            <span className="text-xs text-slate-500">
+                              {foundUser.email}
+                            </span>
+                          </div>
+                          <button
+                            // onClick={() => handleShareWithUser(foundUser._id)}
+                            className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-md text-xs font-medium hover:bg-green-700 transition-colors"
+                          >
+                            <Share2 size={14} /> Send
+                          </button>
+                        </div>
+                      ) : (
+                        /* Empty State */
+                        <p className="text-xs text-slate-400">
+                          Search results will appear here
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="p-4 bg-slate-50 flex justify-end">
+                  <button
+                    onClick={() => setIsShareModalOpen(false)}
+                    className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
