@@ -46,6 +46,41 @@ class Uploads {
       .deleteOne({ _id: new ObjectId(id) });
   }
 
+  static async getSharedFiles(userId) {
+    return await db
+      .getDb()
+      .collection("uploads")
+      .find({ sharedWith: new ObjectId(userId) })
+      .sort({ _id: -1 })
+      .toArray();
+  }
+
+  static async groupSharedFiles(userId) {
+    const files = await this.getSharedFiles(userId);
+    return await files.reduce((acc, file) => {
+      const date = new Date(file.date);
+      const month = date.toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      });
+      const day = date.toLocaleString("default", {
+        month: "long",
+        day: "numeric",
+      });
+      if (!acc[month]) {
+        acc[month] = {};
+      }
+
+      if (!acc[month][day]) {
+        acc[month][day] = [];
+      }
+
+      acc[month][day].push(file);
+
+      return acc;
+    }, {});
+  }
+
   static async groupAllFiles(files) {
     return await files.reduce((acc, file) => {
       const date = new Date(file.date);
