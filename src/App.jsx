@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Archive from "./pages/Archive";
 import CreateUser from "./pages/admin/CreateUser";
+import Shared from "./pages/Shared";
 const App = () => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/archive" element={<Archive />} />
+          <Route path="/shared" element={<Shared />} />
         </Route>
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

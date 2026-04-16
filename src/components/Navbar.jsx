@@ -55,6 +55,7 @@ const Navbar = () => {
 
   const handleCreateUser = () => navigate("/admin/create-user");
   const handleArchive = () => navigate("/archive");
+  const handleShare = () => navigate("/shared");
 
   const getDashboard = () => {
     if (authState.isAdmin) {
@@ -139,6 +140,13 @@ const Navbar = () => {
 
             {authState.isAuthenticated && !authState.isAdmin && (
               <>
+                <motion.button
+                  variants={childVariants}
+                  onClick={handleShare}
+                  className="bg-blue-500 px-6 py-2 rounded-lg text-sm font-semibold text-white hover:bg-blue-600 cursor-pointer"
+                >
+                  Shared With Me
+                </motion.button>
                 <motion.button
                   variants={childVariants}
                   onClick={handleArchive}

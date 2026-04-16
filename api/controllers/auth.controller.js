@@ -50,13 +50,23 @@ const login = async (req, res) => {
   if (user.isAdmin) {
     res.status(200).json({
       token,
-      user: { name: user.name, email: user.email, isAdmin: user.isAdmin },
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
     });
     return;
   }
   res.status(200).json({
     token,
-    user: { name: user.name, email: user.email, isAdmin: user.isAdmin },
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    },
   });
 };
 
