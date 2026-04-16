@@ -12,6 +12,13 @@ class User {
     this.password = password;
   }
 
+  static async sharedBy(id) {
+    return await db
+      .getDb()
+      .collection("users")
+      .findOne({ _id: new ObjectId(id) }, { name: 1, _id: 0 });
+  }
+
   static generateAuthToken(user) {
     const token = jwt.sign(
       {

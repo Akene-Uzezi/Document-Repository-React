@@ -7,6 +7,7 @@ const uploadFile = async (req, res) => {
   const sizeMB = (req.file.size / (1024 * 1024)).toFixed(2);
   const fileData = {
     user: req.user.id,
+    owner: req.user.name,
     name: req.file.originalname,
     type: req.file.mimetype,
     path: req.file.path,
@@ -106,10 +107,14 @@ const shareFile = async (req, res) => {
 
 const getSharedFiles = async (req, res) => {
   const { id } = req.params;
-  console.log(`DEBUG: '${id}'`); // The quotes will show if there are leading/trailing spaces
-  console.log(`LENGTH: ${id.length}`);
   const files = await Upload.getSharedFiles(id);
   res.status(200).json({ message: "files grouped", files });
+};
+
+const sharedBy = async (req, res) => {
+  const { id } = req.params;
+  const sharedBy = await User.sharedBy(id);
+  res.status(200).json({ message: "found", sharedBy });
 };
 
 module.exports = {
@@ -122,4 +127,5 @@ module.exports = {
   findUser,
   shareFile,
   getSharedFiles,
+  sharedBy,
 };

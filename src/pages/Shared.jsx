@@ -1,9 +1,9 @@
 import { Search, FileText, User, MoreVertical, LayoutGrid } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
 const Shared = () => {
-  const [sharedGroupFiles, setSharedGroupFiles] = useState({});
+  const [files, setFiles] = useState([]);
   const fetchFiles = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
@@ -17,7 +17,7 @@ const Shared = () => {
         },
       );
       const data = await response.json();
-      response.ok && console.table(data.files);
+      response.ok && setFiles(data.files);
     } catch (err) {
       console.log(err);
     }
@@ -26,7 +26,9 @@ const Shared = () => {
     fetchFiles();
   }, []);
   const filters = ["all", "pdf", "word", "excel", "image"];
-  const filteredFiles = useMemo(() => {}, [sharedGroupFiles]);
+  const filteredFiles = useMemo(() => {
+    return files;
+  }, [files]);
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
       {/* Header Section */}
@@ -70,60 +72,63 @@ const Shared = () => {
       </div>
 
       {/* Files Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {/* Placeholder Card (Repeat this for your map) */}
-        {[1, 2, 3, 4].map((item) => (
-          <></>
-          // <motion.div
-          //   key={item}
-          //   whileHover={{ y: -4 }}
-          //   className="bg-white group p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all relative"
-          // >
-          //   <div className="flex items-start justify-between mb-4">
-          //     <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
-          //       <FileText size={24} />
-          //     </div>
-          //     <button className="text-slate-300 hover:text-slate-600 cursor-pointer">
-          //       <MoreVertical size={18} />
-          //     </button>
-          //   </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {filteredFiles.map((file) => (
+          <motion.div
+            key={file.name}
+            whileHover={{ y: -4 }}
+            className="bg-white group p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all relative"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                <FileText size={24} />
+              </div>
+              <button className="text-slate-300 hover:text-slate-600 cursor-pointer">
+                <MoreVertical size={18} />
+              </button>
+            </div>
 
-          //   <h3 className="font-semibold text-slate-800 text-sm truncate mb-1">
-          //     filename
-          //   </h3>
+            <h3 className="font-semibold text-slate-800 text-sm truncate mb-1">
+              {file.name}
+            </h3>
 
-          //   <div className="flex items-center gap-2 text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-4">
-          //     <span className="bg-slate-100 px-2 py-0.5 rounded">
-          //       filetype e.g pdf
-          //     </span>
-          //     <span>•</span>
-          //     <span>filesize</span>
-          //   </div>
+            <div className="flex items-center gap-2 text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-4">
+              <span className="bg-slate-100 px-2 py-0.5 rounded">
+                {file.type.split("/")[1]}
+              </span>
+              <span>•</span>
+              <span>{file.sizeMB} MB</span>
+            </div>
 
-          //   {/* Shared By Info */}
-          //   <div className="flex items-center gap-2 pt-3 border-t border-slate-50">
-          //     <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-          //       <User size={12} />
-          //     </div>
-          //     <span className="text-xs text-slate-500 truncate">
-          //       Shared by{" "}
-          //       <span className="font-medium text-slate-700">file owner</span>
-          //     </span>
-          //   </div>
-          // </motion.div>
+            {/* Shared By Info */}
+            <div className="flex items-center gap-2 pt-3 border-t border-slate-50">
+              <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+                <User size={12} />
+              </div>
+              <span className="text-xs text-slate-500 truncate">
+                Shared by{" "}
+                <span className="font-medium text-slate-700">{file.owner}</span>
+              </span>
+            </div>
+          </motion.div>
         ))}
       </div>
-
       {/* Empty State (Hidden by default, used when results === 0) */}
-      <div className="hidden text-center py-20">
-        <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <LayoutGrid className="text-slate-300" size={32} />
-        </div>
-        <h3 className="text-slate-800 font-semibold">No shared files found</h3>
-        <p className="text-slate-500 text-sm">
-          You haven't received any files yet.
-        </p>
-      </div>
+      {filteredFiles.length === 0 && (
+        <>
+          <div className=" text-center py-20">
+            <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <LayoutGrid className="text-slate-300" size={32} />
+            </div>
+            <h3 className="text-slate-800 font-semibold">
+              No shared files found
+            </h3>
+            <p className="text-slate-500 text-sm">
+              You haven't received any files yet.
+            </p>
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -21,4 +21,6 @@ router.post("/api/share/:id", userController.shareFile);
 
 router.get("/api/shared/:id", userController.getSharedFiles);
 
+router.get("/api/sharedby/:id", userController.sharedBy);
+
 module.exports = router;
