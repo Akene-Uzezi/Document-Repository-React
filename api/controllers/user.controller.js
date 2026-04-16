@@ -94,14 +94,22 @@ const findUser = async (req, res) => {
 };
 
 const shareFile = async (req, res) => {
-  const { userId } = req.body;
+  const { userID } = req.body;
   const file = await Upload.findFileById(req.params.id);
   if (file.user.toString() !== req.user.id)
     return res.status(403).json({ message: "only users can share files" });
 
-  (await Upload.shareFile(req.params.id, userId))
+  (await Upload.shareFile(req.params.id, userID))
     ? res.status(200).json({ message: "File shared" })
     : res.status(401).json({ message: "Error sharing file" });
+};
+
+const getSharedFiles = async (req, res) => {
+  const { id } = req.params;
+  console.log(`DEBUG: '${id}'`); // The quotes will show if there are leading/trailing spaces
+  console.log(`LENGTH: ${id.length}`);
+  const files = await Upload.getSharedFiles(id);
+  res.status(200).json({ message: "files grouped", files });
 };
 
 module.exports = {
@@ -113,4 +121,5 @@ module.exports = {
   getFiles,
   findUser,
   shareFile,
+  getSharedFiles,
 };

@@ -50,13 +50,11 @@ class Uploads {
     return await db
       .getDb()
       .collection("uploads")
-      .find({ sharedWith: new ObjectId(userId) })
-      .sort({ _id: -1 })
+      .find({ sharedWith: { $in: [new ObjectId(userId)] } }) // Use $in for explicit array matching
       .toArray();
   }
 
-  static async groupSharedFiles(userId) {
-    const files = await this.getSharedFiles(userId);
+  static async groupSharedFiles(files) {
     return await files.reduce((acc, file) => {
       const date = new Date(file.date);
       const month = date.toLocaleString("default", {

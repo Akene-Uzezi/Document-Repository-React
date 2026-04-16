@@ -1,7 +1,29 @@
 import { Search, FileText, User, MoreVertical, LayoutGrid } from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 
 const Shared = () => {
+  const fetchFiles = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/shared/${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await response.json();
+      response.ok && console.table(data.files);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchFiles();
+  }, []);
   const filters = ["all", "pdf", "word", "excel", "image"];
 
   return (
