@@ -1,5 +1,96 @@
 @import "tailwindcss";
+/* --- Mobile Responsive Overrides --- */
 
-body {
-  width: 100%;
+@media (max-width: 768px) {
+  /* 1. Layout Container adjustments */
+  .container,
+  .p-8,
+  .p-10 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 1.5rem !important;
+  }
+
+  /* 2. Grid Stacking */
+  /* Ensures file cards in Archive and Shared views stack vertically */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* 3. Modal adjustments (Share Modal) */
+  /* Makes modals take up more screen real estate on small devices */
+  .motion-div-modal,
+  div[role="dialog"] > div {
+    width: 95% !important;
+    margin: 10px auto !important;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* 4. Form and Input optimizations */
+  /* Larger touch targets for mobile users */
+  input,
+  button {
+    font-size: 16px !important; /* Prevents iOS zoom on focus */
+    min-height: 44px; /* Apple's recommended minimum touch target */
+  }
+
+  form {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* 5. Typography */
+  h1,
+  .text-3xl {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+
+  h2,
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+
+  /* 6. Navigation/Tabs */
+  /* If you have a sidebar or horizontal nav, this helps them wrap or scroll */
+  .flex-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* 7. Hide non-essential columns in tables (Admin Dashboard) */
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  /* Force table-like structures to stack */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  tr {
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+/* --- Small Mobile Devices --- */
+@media (max-width: 480px) {
+  .flex-row {
+    flex-direction: column !important;
+  }
+
+  .w-full-mobile {
+    width: 100% !important;
+  }
 }

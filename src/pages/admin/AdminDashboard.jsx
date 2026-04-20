@@ -88,17 +88,17 @@ const AdminDashboard = () => {
   };
   const handleSuspend = async (user) => {
     const token = localStorage.getItem("token");
-    setLoading(true)
+    setLoading(true);
     if (user.isSuspended) {
       await fetch(`${import.meta.env.VITE_API_URL}/admin/restore/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchUsers()
+      fetchUsers();
     } else {
       await fetch(`${import.meta.env.VITE_API_URL}/admin/suspend/${user.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchUsers()
+      fetchUsers();
     }
   };
   const handleOpenModal = (user) => {
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
               User
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="hidden-mobile text-[10px] font-bold uppercase tracking-wider text-slate-400">
               Actions
             </span>
           </div>
@@ -160,9 +160,12 @@ const AdminDashboard = () => {
                     </div>
                     <div className="truncate">
                       <h4 className="text-sm font-medium text-slate-900 truncate">
-                        {user.name} {user.isSuspended && (<i className="text-slate-500">(suspended)</i>)}
+                        {user.name}{" "}
+                        {user.isSuspended && (
+                          <i className="text-slate-500">(suspended)</i>
+                        )}
                       </h4>
-                      <p className="text-xs text-slate-500 truncate">
+                      <p className="hidden-mobile text-xs text-slate-500 truncate">
                         {user.email}
                       </p>
                     </div>
@@ -315,12 +318,14 @@ const AdminDashboard = () => {
                             </>
                           ) : (
                             <>
-                              <button
-                                type="submit"
-                                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg"
-                              >
-                                Save Changes
-                              </button>
+                              <div className="flex flex-wrap justify-end gap-3 pt-2">
+                                <button
+                                  type="submit"
+                                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg"
+                                >
+                                  Save Changes
+                                </button>
+                              </div>
                             </>
                           )}
                         </AnimatePresence>
