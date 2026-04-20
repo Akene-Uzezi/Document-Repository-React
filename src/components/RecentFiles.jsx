@@ -32,6 +32,15 @@ const RecentFiles = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to fetch file");
 
       const blob = await response.blob();
@@ -55,6 +64,15 @@ const RecentFiles = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to download");
       console.log("Downloading ...");
       const blob = await response.blob();
@@ -81,6 +99,15 @@ const RecentFiles = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to delete file");
       const data = await response.json();
       console.log(data);
@@ -101,6 +128,15 @@ const RecentFiles = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const data = await response.json();
       if (response.ok) {
         const user = data.user;
@@ -128,6 +164,15 @@ const RecentFiles = () => {
           body: JSON.stringify(data),
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const resdata = await response.json();
       response.ok ? console.log(resdata.message) : console.log(resdata.message);
       setIsShareModalOpen(false);

@@ -44,6 +44,15 @@ const CreateUser = () => {
           body: JSON.stringify(formData),
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) {
         const data = await response.json();
         setError(data.error);

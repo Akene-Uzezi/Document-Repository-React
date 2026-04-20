@@ -29,7 +29,7 @@ class User {
       },
       process.env.JWTSecret,
       {
-        expiresIn: "1h",
+        expiresIn: "30m",
       },
     );
     return token;

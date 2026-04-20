@@ -41,6 +41,15 @@ const AdminDashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const data = await response.json();
       setUsers(data.users);
     } catch (err) {
@@ -70,6 +79,15 @@ const AdminDashboard = () => {
           body: JSON.stringify(formData),
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (response.ok) {
         setResetSuccess("User Reset Successfully");
         setTimeout(() => {
@@ -90,14 +108,38 @@ const AdminDashboard = () => {
     const token = localStorage.getItem("token");
     setLoading(true);
     if (user.isSuspended) {
-      await fetch(`${import.meta.env.VITE_API_URL}/admin/restore/${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/restore/${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       fetchUsers();
     } else {
-      await fetch(`${import.meta.env.VITE_API_URL}/admin/suspend/${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/admin/suspend/${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       fetchUsers();
     }
   };

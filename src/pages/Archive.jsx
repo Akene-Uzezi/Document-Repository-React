@@ -34,6 +34,15 @@ const Archive = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const data = await response.json();
       if (response.ok) {
         const user = data.user;
@@ -63,6 +72,15 @@ const Archive = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to get grouped files");
       const data = await response.json();
       setGroupedFiles(data.files || {});
@@ -130,6 +148,15 @@ const Archive = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to fetch file");
 
       const blob = await response.blob();
@@ -154,6 +181,15 @@ const Archive = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to download");
 
       const blob = await response.blob();
@@ -183,6 +219,15 @@ const Archive = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to delete file");
 
       // Refresh list after deletion
@@ -207,6 +252,15 @@ const Archive = () => {
           body: JSON.stringify(data),
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const resdata = await response.json();
       response.ok ? console.log(resdata.message) : console.log(resdata.message);
       setIsShareModalOpen(false);

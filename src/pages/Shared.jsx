@@ -27,6 +27,15 @@ const Shared = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const data = await response.json();
       response.ok && setFiles(data.files);
     } catch (err) {
@@ -64,6 +73,15 @@ const Shared = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to fetch file");
       const blob = await response.blob();
       const fileUrl = URL.createObjectURL(blob);
@@ -87,6 +105,15 @@ const Shared = () => {
           },
         },
       );
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       if (!response.ok) throw new Error("Failed to download");
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);

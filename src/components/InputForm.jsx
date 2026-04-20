@@ -51,6 +51,15 @@ const InputForm = () => {
         },
         body: data,
       });
+      if (response.status === 401) {
+        // 1. Clear local storage so the app knows we are logged out
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        // 2. Send the user to login
+        window.location.href = "/login";
+        return;
+      }
       const resdata = await response.json();
       if (response.ok) {
         setSuccess(resdata.message);
