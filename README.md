@@ -42,7 +42,7 @@ Document-Repository-React/
 │   ├── database/          # Database connection management
 │   ├── models/            # Data models and methods
 │   ├── public/            # Static files
-���   ├── routes/            # API route definitions
+│   ├── routes/            # API route definitions
 │   ├── views/             # EJS templates
 │   ├── app.js             # Main application file
 │   └── package.json       # Backend dependencies
@@ -73,7 +73,12 @@ Document-Repository-React/
    npm install
    ```
 
-3. **Start the development server**:
+3. **Create a `.env.local` file** in the root directory with the following variables:
+   ```
+   VITE_API_BASE_URL=http://localhost:3000
+   ```
+
+4. **Start the development server**:
    ```bash
    npm run dev
    ```
@@ -96,7 +101,7 @@ Document-Repository-React/
    DB_NAME=your_database_name
    MONGODB_URI=your_mongodb_connection_string
    SESSION_SECRET=your_session_secret_key
-   APP_PASSWORD=your_app_password
+   APP_PASSWORD=your_google_app_password
    ADMIN_EMAIL=admin@example.com
    ```
 
@@ -113,11 +118,41 @@ Document-Repository-React/
 
 ### Environment Variables
 
+#### Backend (.env)
 - `DB_NAME`: MongoDB database name
-- `MONGODB_URI`: MongoDB connection string
-- `SESSION_SECRET`: Secret key for session management
-- `APP_PASSWORD`: Google App Password (requires 2-step verification enabled)
-- `ADMIN_EMAIL`: Admin user email address
+- `MONGODB_URI`: MongoDB connection string (e.g., `mongodb+srv://username:password@cluster.mongodb.net/dbname`)
+- `SESSION_SECRET`: Secret key for session management (use a strong random string)
+- `APP_PASSWORD`: Google App Password for Nodemailer (see instructions below)
+- `ADMIN_EMAIL`: Admin user email address (typically a Gmail address)
+
+#### Frontend (.env.local)
+- `VITE_API_BASE_URL`: Backend API URL (default: `http://localhost:3000`)
+
+### How to Create a Google App Password
+
+The application uses Nodemailer to send emails. To do this, you need a Google App Password:
+
+1. **Enable 2-Step Verification**:
+   - Go to your [Google Account](https://myaccount.google.com/)
+   - Click on **Security** in the left sidebar
+   - Enable **2-Step Verification** if not already enabled
+
+2. **Generate App Password**:
+   - Go to your [Google Account Security settings](https://myaccount.google.com/security)
+   - Scroll to **App passwords** (only appears if 2-Step Verification is enabled)
+   - Select **Mail** and **Windows Computer** (or your device type)
+   - Click **Generate**
+   - Google will display a 16-character password
+
+3. **Copy and Use**:
+   - Copy the 16-character password shown
+   - Paste it as the `APP_PASSWORD` value in your `.env` file
+   - **Do not share this password** - treat it like a secret key
+
+Example:
+```
+APP_PASSWORD=abcd efgh ijkl mnop
+```
 
 ## Running the Application
 
