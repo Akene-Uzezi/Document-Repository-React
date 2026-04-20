@@ -109,7 +109,10 @@ const Navbar = () => {
 
           <motion.div
             variants={variants}
-            className="hidden md:flex items-center space-x-8"
+            initial="hidden"
+            animate="visible"
+            // Removed 'hidden', changed space-x-8 to flex-wrap with gap-2
+            className="flex flex-wrap items-center justify-center md:justify-end gap-2"
           >
             {/* 3. Use authState instead of global constants */}
             {authState.isAuthenticated && authState.isAdmin && (

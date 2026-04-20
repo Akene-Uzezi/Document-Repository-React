@@ -82,6 +82,24 @@
     border-radius: 0.5rem;
     padding: 0.5rem;
   }
+  nav {
+    height: auto !important;
+    padding: 1rem 0;
+  }
+
+  /* Center the logo and buttons when stacked */
+  nav > div {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+
+  /* Make buttons slightly smaller so more fit on one line */
+  nav button {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    flex: 1 1 auto; /* Allows buttons to grow/shrink slightly */
+    min-width: 100px;
+  }
 }
 
 /* --- Small Mobile Devices --- */
