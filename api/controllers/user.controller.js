@@ -27,12 +27,16 @@ const uploadFile = async (req, res) => {
 const downloadFile = async (req, res) => {
   const { id } = req.params;
   const file = await Upload.findFileById(id);
-  if (file.user.toString() !== req.user.id.toString()) {
-    res.status(403).json({ error: "not authorized" });
-    return;
+  const isOwner = file.user.toString() === req.user.id.toString();
+  const isShared = file.sharedWith.some(
+    (shareId) => shareId.toString() === req.user.id.toString(),
+  );
+  if (isOwner || isShared) {
+    const filePath = path.join(__dirname, "..", file.path.toString());
+    return res.sendFile(filePath);
   }
-  const filePath = path.join(__dirname, "..", file.path.toString());
-  res.sendFile(filePath);
+  res.status(403).json({ error: "not authorized" });
+  return;
 };
 
 const viewFile = async (req, res) => {

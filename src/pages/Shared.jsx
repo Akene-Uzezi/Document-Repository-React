@@ -63,6 +63,33 @@ const Shared = () => {
       setTimeout(() => {
         URL.revokeObjectURL(fileUrl);
       }, 10000);
+      setActiveMenu(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleDownload = async (e, fileid, fileName) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/download/${fileid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to download");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName || "downloadedFile");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      setActiveMenu(null);
     } catch (err) {
       console.log(err);
     }
@@ -141,13 +168,13 @@ const Shared = () => {
                     >
                       <button
                         onClick={() => handleView(file._id)}
-                        className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
+                        className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
                       >
                         <Eye size={14} /> View
                       </button>
                       <button
-                        onClick={() => console.log("Download", file.name)}
-                        className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 border-t border-slate-50 transition-colors"
+                        onClick={(e) => handleDownload(e, file._id, file.name)}
+                        className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 border-t border-slate-50 transition-colors"
                       >
                         <Download size={14} /> Download
                       </button>
