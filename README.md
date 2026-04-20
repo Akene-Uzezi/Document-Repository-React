@@ -15,6 +15,7 @@ A full-stack web application for uploading, viewing, downloading, and managing d
 ## Tech Stack
 
 ### Frontend
+
 - **React** 19.2.4 - UI library
 - **Vite** 8.0 - Build tool with HMR
 - **React Router DOM** 7.13 - Routing
@@ -23,6 +24,7 @@ A full-stack web application for uploading, viewing, downloading, and managing d
 - **Lucide React** 1.7 - Icon library
 
 ### Backend
+
 - **Node.js** - Runtime environment
 - **Express.js** 5.1 - Web framework
 - **MongoDB** 6.20 - Database
@@ -56,6 +58,7 @@ Document-Repository-React/
 ## Installation & Setup
 
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - npm or yarn
 - MongoDB (local or cloud instance)
@@ -63,19 +66,22 @@ Document-Repository-React/
 ### Frontend Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Akene-Uzezi/Document-Repository-React.git
    cd Document-Repository-React
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
-3. **Create a `.env.local` file** in the root directory with the following variables:
+3. **Create a `.env` file** in the root directory with the following variables:
+
    ```
-   VITE_API_BASE_URL=http://localhost:3000
+   VITE_API_URL=http://localhost:3000
    ```
 
 4. **Start the development server**:
@@ -87,25 +93,31 @@ Document-Repository-React/
 ### Backend Setup
 
 1. **Navigate to the api directory**:
+
    ```bash
    cd api
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Create a `.env` file** in the `api/` directory with the following variables:
+
    ```
-   DB_NAME=your_database_name
-   MONGODB_URI=your_mongodb_connection_string
-   SESSION_SECRET=your_session_secret_key
-   APP_PASSWORD=your_google_app_password
-   ADMIN_EMAIL=admin@example.com
+   dbName=your_database_name
+   uri=your_mongodb_connection_string
+   JWTSecret=your_session_secret_key
+   appPassword=your_google_app_password
+   AdminEmail=admin@example.com
+   frontend=your_frontend_url
+   endpoint=your_dedicated_api_endpoint #This is used for the keepalive script
    ```
 
 4. **Create an `uploads/` folder** in the `api/` directory:
+
    ```bash
    mkdir uploads
    ```
@@ -119,14 +131,16 @@ Document-Repository-React/
 ### Environment Variables
 
 #### Backend (.env)
+
 - `DB_NAME`: MongoDB database name
 - `MONGODB_URI`: MongoDB connection string (e.g., `mongodb+srv://username:password@cluster.mongodb.net/dbname`)
 - `SESSION_SECRET`: Secret key for session management (use a strong random string)
 - `APP_PASSWORD`: Google App Password for Nodemailer (see instructions below)
 - `ADMIN_EMAIL`: Admin user email address (typically a Gmail address)
 
-#### Frontend (.env.local)
-- `VITE_API_BASE_URL`: Backend API URL (default: `http://localhost:3000`)
+#### Frontend (.env)
+
+- `VITE_API_URL`: Backend API URL (default: `http://localhost:3000`)
 
 ### How to Create a Google App Password
 
@@ -150,6 +164,7 @@ The application uses Nodemailer to send emails. To do this, you need a Google Ap
    - **Do not share this password** - treat it like a secret key
 
 Example:
+
 ```
 APP_PASSWORD=abcd efgh ijkl mnop
 ```
@@ -157,11 +172,13 @@ APP_PASSWORD=abcd efgh ijkl mnop
 ## Running the Application
 
 1. Start the backend server (from `api/` directory):
+
    ```bash
    npm run dev
    ```
 
 2. In another terminal, start the frontend (from root directory):
+
    ```bash
    npm run dev
    ```
@@ -171,18 +188,21 @@ APP_PASSWORD=abcd efgh ijkl mnop
 ## Available Scripts
 
 ### Frontend
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build
 
 ### Backend
+
 - `npm run dev` - Start with nodemon (auto-reload)
 - `npm start` - Start production server
 
 ## Contributing
 
 Contributions are welcome! Feel free to:
+
 - Open issues for bugs or feature requests
 - Submit pull requests with improvements
 - Suggest enhancements
