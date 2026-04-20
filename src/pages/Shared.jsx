@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 
 const Shared = () => {
   const [files, setFiles] = useState([]);
+  const [search, setSearch] = useState("");
   const [activeMenu, setActiveMenu] = useState(null); // Tracks the ID/Name of the open menu
   const menuRef = useRef(null);
   const token = localStorage.getItem("token");
@@ -32,6 +33,9 @@ const Shared = () => {
       console.log(err);
     }
   };
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
   useEffect(() => {
     fetchFiles();
     const handleClickOutside = (event) => {
@@ -42,10 +46,14 @@ const Shared = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  const filters = ["all", "pdf", "word", "excel", "image"];
   const filteredFiles = useMemo(() => {
-    return files;
-  }, [files]);
+    return files.filter((file) => {
+      const matchesSearch = file.name
+        .toLowerCase()
+        .includes((search || "").toLowerCase());
+      return matchesSearch;
+    });
+  }, [search, files]);
   const handleView = async (fileid) => {
     try {
       const response = await fetch(
@@ -113,27 +121,11 @@ const Shared = () => {
           />
           <input
             type="text"
+            onChange={handleChange}
             placeholder="Search shared files..."
             className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm transition-all"
           />
         </div>
-      </div>
-
-      {/* Filter Chips */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {filters.map((filter) => (
-          <button
-            key={filter}
-            className={`px-4 py-1.5 rounded-full text-xs font-medium capitalize transition-all border 
-              ${
-                filter === "all"
-                  ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                  : "bg-white text-slate-600 border-slate-200 hover:border-blue-400 cursor-pointer"
-              }`}
-          >
-            {filter}
-          </button>
-        ))}
       </div>
 
       {/* Files Grid */}
