@@ -36,18 +36,34 @@ const downloadFile = async (req, res) => {
 };
 
 const viewFile = async (req, res) => {
+  // 1. Authentication Check
   if (!req.user) {
-    res.status(401).json({ error: "not authenticated" });
-    return;
+    return res.status(401).json({ error: "not authenticated" });
   }
+
   const { id } = req.params;
   const file = await Upload.findFileById(id);
-  if (file.user.toString() !== req.user.id.toString()) {
-    res.status(403).json({ error: "not authorized" });
-    return;
+
+  if (!file) {
+    return res.status(404).json({ error: "file not found" });
   }
-  const filePath = path.join(__dirname, "..", file.path.toString());
-  res.sendFile(filePath);
+
+  // 2. Authorization Logic
+  const isOwner = file.user.toString() === req.user.id.toString();
+
+  // Convert ObjectIds to strings to accurately compare with req.user.id
+  const isShared = file.sharedWith.some(
+    (shareId) => shareId.toString() === req.user.id.toString(),
+  );
+
+  if (isOwner || isShared) {
+    // 3. Absolute Path Resolution
+    const filePath = path.resolve(__dirname, "..", file.path);
+    return res.sendFile(filePath);
+  }
+
+  // 4. Fallback if neither owner nor shared
+  return res.status(403).json({ error: "not authorized" });
 };
 
 const deleteFile = async (req, res) => {

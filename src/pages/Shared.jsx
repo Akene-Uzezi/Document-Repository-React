@@ -14,9 +14,9 @@ const Shared = () => {
   const [files, setFiles] = useState([]);
   const [activeMenu, setActiveMenu] = useState(null); // Tracks the ID/Name of the open menu
   const menuRef = useRef(null);
+  const token = localStorage.getItem("token");
   const fetchFiles = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/shared/${user.id}`,
@@ -46,6 +46,27 @@ const Shared = () => {
   const filteredFiles = useMemo(() => {
     return files;
   }, [files]);
+  const handleView = async (fileid) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/view/${fileid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to fetch file");
+      const blob = await response.blob();
+      const fileUrl = URL.createObjectURL(blob);
+      window.open(fileUrl, "_blank");
+      setTimeout(() => {
+        URL.revokeObjectURL(fileUrl);
+      }, 10000);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
       {/* Header Section */}
@@ -103,14 +124,14 @@ const Shared = () => {
                 </div>
                 <button
                   onClick={() =>
-                    setActiveMenu(activeMenu === file.name ? null : file.name)
+                    setActiveMenu(activeMenu === file ? null : file)
                   }
                   className="text-slate-300 hover:text-slate-600 cursor-pointer"
                 >
                   <MoreVertical size={18} />
                 </button>
                 <AnimatePresence>
-                  {activeMenu === file.name && (
+                  {activeMenu === file && (
                     <motion.div
                       ref={menuRef}
                       initial={{ opacity: 0, scale: 0.95, y: -10 }}
@@ -119,7 +140,7 @@ const Shared = () => {
                       className="absolute right-0 mt-2 w-36 bg-white border border-slate-100 rounded-xl shadow-xl z-50 overflow-hidden"
                     >
                       <button
-                        onClick={() => console.log("View", file.name)}
+                        onClick={() => handleView(file._id)}
                         className="w-full flex items-center gap-2 px-4 py-2.5 text-xs text-slate-600 hover:bg-slate-50 transition-colors"
                       >
                         <Eye size={14} /> View
