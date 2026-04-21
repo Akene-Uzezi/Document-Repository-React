@@ -14,8 +14,6 @@ const childVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const token = localStorage.getItem("token");
-
 const CreateUser = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +28,7 @@ const CreateUser = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = async (e) => {
+    const token = localStorage.getItem("token");
     e.preventDefault();
     setIsLoading(true);
     try {
