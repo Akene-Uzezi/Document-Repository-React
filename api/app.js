@@ -46,7 +46,7 @@ app.use(notFoundMiddleware);
 app.use(serverErrorMiddleware);
 
 // Replace with your actual Render URL
-const API_URL = process.env.endpoint
+const API_URL = process.env.endpoint;
 
 const startKeepAlive = () => {
   // 600000ms = 10 minutes
@@ -68,7 +68,14 @@ startKeepAlive();
 const PORT = process.env.PORT || 3000;
 
 db.connect()
-  .then(() => {
+  .then(async () => {
+    try {
+      const database = db.getDb();
+      await database.collection("uploads").createIndex({ sharedWith: 1 });
+      console.log("Index created successfully");
+    } catch (err) {
+      console.error("error creating sharedWith index", err);
+    }
     app.listen(PORT, "0.0.0.0", () => {
       console.log("connected to database and started the server");
     });
