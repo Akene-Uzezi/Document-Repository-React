@@ -67,18 +67,33 @@ startKeepAlive();
 
 const PORT = process.env.PORT || 3000;
 
+const setUpIndexes = async (database) => {
+  console.log("initializing database indexes...");
+  const uploads = database.collection("uploads");
+  await uploads.createIndex({ user: 1 });
+  await uploads.createIndex({ sharedWith: 1 });
+  await uploads.createIndex({ user: 1, _id: -1 });
+
+  const users = database.collection("users");
+  await users.createIndex({ email: 1 }, { unique: true });
+  console.log("Indexes created successfully");
+};
+
 db.connect()
   .then(async () => {
     try {
       const database = db.getDb();
-      await database.collection("uploads").createIndex({ sharedWith: 1 });
-      console.log("Index created successfully");
+
+      // Call the consolidated indexing function
+      await setUpIndexes(database);
+
+      app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Server started on port ${PORT}`);
+      });
     } catch (err) {
-      console.error("error creating sharedWith index", err);
+      console.error("Database initialization failed:", err);
+      process.exit(1); // Exit if critical indexes fail
     }
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log("connected to database and started the server");
-    });
   })
   .catch((err) => {
     console.error("Failed to connect to database", err);
