@@ -15,6 +15,7 @@ const userRoutes = require("./routes/user.routes");
 //database connection
 const db = require("./database/documentRepository.db");
 const app = express();
+app.set("trust proxy", 1);
 // enable CORS for all routes
 const CLIENT_URL = process.env.frontend || "http://localhost:5173";
 const corsOptions = {
