@@ -57,7 +57,7 @@ class Uploads {
 
   static async groupAllFiles(userId, files) {
     const key = `archive:${userId}`;
-    const cachedFiles = redisClient.get(key);
+    const cachedFiles = await redisClient.get(key);
     if (cachedFiles) {
       return JSON.parse(cachedFiles);
     }

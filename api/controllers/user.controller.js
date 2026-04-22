@@ -2,6 +2,7 @@ const Upload = require("../models/uploads.model");
 const User = require("../models/user.model");
 const path = require("path");
 const fs = require("fs");
+const redisClient = require("../util/redisClient");
 const uploadFile = async (req, res) => {
   const sizeKB = (req.file.size / 1024).toFixed(2);
   const sizeMB = (req.file.size / (1024 * 1024)).toFixed(2);
@@ -18,6 +19,7 @@ const uploadFile = async (req, res) => {
   };
   const uploaded = await Upload.upload(fileData);
   if (uploaded) {
+    await redisClient.del(`archive:${req.user.id}`);
     res.status(200).json({ message: "File uploaded successfully" });
   } else {
     res.status(400).json({ error: "Failed to upload file to database" });
@@ -88,7 +90,8 @@ const deleteFile = async (req, res) => {
       console.log("error deleting file err:", err);
     }
   });
-  res.status(200).json({ message: "File deleted successfully" });
+  await redisClient.del(`archive:${req.user.id}`);
+  return res.status(200).json({ message: "File deleted successfully" });
 };
 
 const getArchive = async (req, res) => {

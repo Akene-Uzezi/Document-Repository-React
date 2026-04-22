@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+const redisClient = require("../util/redisClient");
 const ObjectId = require("mongodb").ObjectId;
 class User {
   constructor(name, email, password) {
@@ -13,10 +14,26 @@ class User {
   }
 
   static async sharedBy(id) {
-    return await db
-      .getDb()
-      .collection("users")
-      .findOne({ _id: new ObjectId(id) }, { name: 1, _id: 0 });
+    const key = `userName:${id}`;
+    const expiration = 24 * 60 * 60;
+    try {
+      const cachedUsers = await redisClient.get(key);
+      if (cachedUsers) {
+        return JSON.parse(cachedUsers);
+      }
+      const user = await db
+        .getDb()
+        .collection("users")
+        .findOne({ _id: new ObjectId(id) }, { name: 1, _id: 0 });
+      await redisClient.setEx(key, expiration, JSON.stringify(user));
+      return user;
+    } catch (err) {
+      console.err("cache error in sharedBy", err);
+      return await db
+        .getDb()
+        .collection("users")
+        .findOne({ _id: new ObjectId(id) }, { name: 1, _id: 0 });
+    }
   }
 
   static generateAuthToken(user) {
