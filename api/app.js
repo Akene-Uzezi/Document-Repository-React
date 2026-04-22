@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const checkAuth = require("./middlewares/cheackAuth");
+const { generalLimiter, authLimiter } = require("./middlewares/rateLimiter");
 require("dotenv").config();
 //middlewares
 const notFoundMiddleware = require("./middlewares/not-found");
@@ -33,9 +34,10 @@ app.use(express.json({ limit: "50mb" }));
 
 // middleware to parse incoming request bodies
 app.use(express.urlencoded({ extended: false }));
+app.use(generalLimiter);
 
 // routes
-app.use(authRoutes);
+app.use(authLimiter, authRoutes);
 app.use(checkAuth);
 app.use(userRoutes);
 app.use("/api/admin", adminRoutes);

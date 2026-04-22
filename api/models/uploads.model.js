@@ -1,4 +1,5 @@
 const db = require("../database/documentRepository.db");
+const redisClient = require("../util/redisClient");
 const ObjectId = require("mongodb").ObjectId;
 class Uploads {
   static async getUserfiles(userId) {
@@ -54,33 +55,13 @@ class Uploads {
       .toArray();
   }
 
-  static async groupSharedFiles(files) {
-    return await files.reduce((acc, file) => {
-      const date = new Date(file.date);
-      const month = date.toLocaleString("default", {
-        month: "long",
-        year: "numeric",
-      });
-      const day = date.toLocaleString("default", {
-        month: "long",
-        day: "numeric",
-      });
-      if (!acc[month]) {
-        acc[month] = {};
-      }
-
-      if (!acc[month][day]) {
-        acc[month][day] = [];
-      }
-
-      acc[month][day].push(file);
-
-      return acc;
-    }, {});
-  }
-
-  static async groupAllFiles(files) {
-    return await files.reduce((acc, file) => {
+  static async groupAllFiles(userId, files) {
+    const key = `archive:${userId}`;
+    const cachedFiles = redisClient.get(key);
+    if (cachedFiles) {
+      return JSON.parse(cachedFiles);
+    }
+    const groupedFiles = await files.reduce((acc, file) => {
       const date = new Date(file.date);
       const month = date.toLocaleString("default", {
         month: "long",
@@ -103,6 +84,8 @@ class Uploads {
 
       return acc;
     }, {});
+    await redisClient.setEx(key, 3600, JSON.stringify(groupedFiles));
+    return groupedFiles;
   }
 
   static async shareFile(fileId, userId) {
